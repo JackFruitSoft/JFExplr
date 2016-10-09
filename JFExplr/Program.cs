@@ -29,14 +29,15 @@ namespace JFExplr
                     case "--help":
                         Console.WriteLine("Move");
                         break;
+
                     case "echo":
-                        
                         foreach(string echoValue in restList)
                         {
                             Console.Write(echoValue + " ");
                         }
                         Console.WriteLine();
                         break;
+
                     case "chmod":
                         Console.WriteLine("Move");
                         break;
@@ -46,9 +47,12 @@ namespace JFExplr
                     case "ps":
                         Console.WriteLine("Move");
                         break;
+
                     case "who":
-                        Console.WriteLine("Move");
+                        string userName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+                        Console.WriteLine(userName);
                         break;
+
                     case "date":
                         Console.WriteLine(DateTime.Now.Date);
                         break;
