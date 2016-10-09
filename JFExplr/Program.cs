@@ -27,7 +27,7 @@ namespace JFExplr
                 switch (command)
                 {
                     case "--help":
-                        Console.WriteLine("Move");
+                        Console.WriteLine("--help");
                         break;
 
                     case "echo":
@@ -39,13 +39,13 @@ namespace JFExplr
                         break;
 
                     case "chmod":
-                        Console.WriteLine("Move");
+                        Console.WriteLine("chmod");
                         break;
                     case "grep":
-                        Console.WriteLine("Move");
+                        Console.WriteLine("grep");
                         break;
                     case "ps":
-                        Console.WriteLine("Move");
+                        Console.WriteLine("ps");
                         break;
 
                     case "who":
@@ -56,8 +56,9 @@ namespace JFExplr
                     case "date":
                         Console.WriteLine(DateTime.Now.Date);
                         break;
+
                     case "df":
-                        Console.WriteLine("Move");
+                        Console.WriteLine("df");
                         break;
 
                     case "ls":
@@ -76,33 +77,34 @@ namespace JFExplr
                         }
 
                         break;
+
                     case "cd":
-                        Console.WriteLine("Copy");
+                        Console.WriteLine("cd");
                         //Directory.CreateDirectory(path);
                         break;
                     case "mkdir":
-                        Console.WriteLine("Move");
+                        Console.WriteLine("mkdir");
                         break;
                     case "rmdir":
-                        Console.WriteLine("Move");
+                        Console.WriteLine("rmdir");
                         break;
                     case "cp":
-                        Console.WriteLine("Move");
+                        Console.WriteLine("cp");
                         break;
                     case "rm":
-                        Console.WriteLine("Move");
+                        Console.WriteLine("rm");
                         break;
                     case "mv":
-                        Console.WriteLine("Move");
+                        Console.WriteLine("mv");
                         break;
                     case "more":
-                        Console.WriteLine("Move");
+                        Console.WriteLine("more");
                         break;
                     case "lpr":
-                        Console.WriteLine("Move");
+                        Console.WriteLine("lpr");
                         break;
                     case "man":
-                        Console.WriteLine("Move");
+                        Console.WriteLine("man");
                         break;
                     case "exit":
                     case "quit":
