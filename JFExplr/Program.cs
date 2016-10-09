@@ -49,6 +49,9 @@ namespace JFExplr
                     case "who":
                         Console.WriteLine("Move");
                         break;
+                    case "date":
+                        Console.WriteLine(DateTime.Now.Date);
+                        break;
                     case "df":
                         Console.WriteLine("Move");
                         break;
