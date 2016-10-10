@@ -108,6 +108,9 @@ namespace JFExplr
                                 if(Directory.Exists(currentPath + @"\" + cdSwitch))
                                 {
                                     currentPath = currentPath + @"\" + cdSwitch;
+                                } else
+                                {
+                                    Console.WriteLine("{0}: {1}: {2}: No such file or directory", bashName, command, cdSwitch);
                                 }
 
                                 break;
