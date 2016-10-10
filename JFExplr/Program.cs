@@ -11,12 +11,19 @@ namespace JFExplr
     {
         static void Main(string[] args)
         {
+            //Startup
+            string rootPath = Directory.GetCurrentDirectory();
+            string currentPath = Directory.GetCurrentDirectory();
+            string bashName = "jfexplr";
+            string versionNo = "0.2";
+            string bashLineEnd = "$";
+
             for (;;)
             {
-                Console.Write("jfexplr-0.2$ ");
+                Console.Write("{0}-{1}{2} ", bashName, versionNo, bashLineEnd);
+
                 string commandLine = Console.ReadLine();
                 Array commandList = commandLine.Split(default(string[]), StringSplitOptions.RemoveEmptyEntries);
-
                 string command = (string)commandList.GetValue(0);
                 Array restList = Array.CreateInstance(typeof(String), commandList.Length - 1);
                 for(int i = 0; i < commandList.Length - 1; i++)
@@ -62,26 +69,51 @@ namespace JFExplr
                         break;
 
                     case "ls":
-                        string path = (string)commandList.GetValue(1);
-
-                        Console.WriteLine("Directory Listing");
-                        Array dirList = Directory.GetDirectories(path);
+                        Array dirList = Directory.GetDirectories(currentPath);
                         foreach (string dir in dirList)
                         {
-                            Console.WriteLine(dir.Replace(path, ""));
+                            string dirTemp = dir.Replace(currentPath, "");
+                            Console.WriteLine(dirTemp.Replace(@"\", ""));
+
                         }
-                        Array fileList = Directory.GetDirectories(path);
+                        Array fileList = Directory.GetFiles(currentPath);
                         foreach (string file in fileList)
                         {
-                            Console.WriteLine(file.Replace(path, ""));
+                            string fileTemp = file.Replace(currentPath, "");
+                            Console.WriteLine(fileTemp.Replace(@"\", ""));
                         }
 
                         break;
 
                     case "cd":
-                        Console.WriteLine("cd");
-                        //Directory.CreateDirectory(path);
+                        string cdSwitch = (string) restList.GetValue(0); 
+                        switch(cdSwitch)
+                        {
+                            case "..":
+                                int lastInstance = currentPath.LastIndexOf(@"\");
+                                if(currentPath.Length == lastInstance + 1) //Check is a trailing '\' is at the end of path
+                                {
+                                    currentPath = currentPath.Remove(lastInstance, 1);
+                                    lastInstance = currentPath.LastIndexOf(@"\");
+                                }
+
+                                currentPath = currentPath.Substring(0, lastInstance);
+                                break;
+
+                            case @"/":
+                                currentPath = rootPath;
+                                break;
+
+                            default:
+                                if(Directory.Exists(currentPath + @"\" + cdSwitch))
+                                {
+                                    currentPath = currentPath + @"\" + cdSwitch;
+                                }
+
+                                break;
+                        }
                         break;
+
                     case "mkdir":
                         Console.WriteLine("mkdir");
                         break;
@@ -106,10 +138,21 @@ namespace JFExplr
                     case "man":
                         Console.WriteLine("man");
                         break;
+
+                    case "ifconfig":
+                        //System.Diagnostics.Process.Start("CMD.exe", "/C ipconfig");
+                        break;
+
+                    case "pwd":
+                        Console.WriteLine(currentPath);
+                        break;
+
                     case "exit":
                     case "quit":
                         return;
+
                     default:
+                        Console.WriteLine("{0}: {1}: command not found", bashName, command);
                         break;
                 } //switch
             }
