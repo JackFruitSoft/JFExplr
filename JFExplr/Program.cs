@@ -129,6 +129,12 @@ namespace JFExplr
                         }
                         break;
 
+                    case "open":
+                        Console.WriteLine("open");
+                        // Windows.OpenExplorer("c:\");
+                        System.Diagnostics.Process.Start("explorer.exe", string.Format("/select,\"{0}\"", currentPath));
+                        break;
+
                     case "mkdir":
                         Console.WriteLine("mkdir");
                         break;
@@ -160,6 +166,18 @@ namespace JFExplr
 
                     case "pwd":
                         Console.WriteLine(currentPath);
+                        break;
+
+                    case "restart": //TODO fix the timer
+                    case "reboot":
+                        Console.WriteLine("The system is going down!");
+                        System.Diagnostics.Process.Start("ShutDown", "-r"); //restart
+                        break;
+
+                    case "shutdown":
+                        Console.WriteLine("The system will shutdown now!");
+                        //System.Diagnostics.Process.Start("ShutDown", "-s"); //shutdown
+                        System.Diagnostics.Process.Start("shutdown", "/s /t 0");
                         break;
 
                     case "exit":
