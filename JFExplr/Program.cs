@@ -18,9 +18,20 @@ namespace JFExplr
             string versionNo = "0.2";
             string bashLineEnd = "$";
 
+            string userName = Environment.UserName;
+            string machineName = Environment.MachineName;
+
             for (;;)
             {
-                Console.Write("{0}-{1}{2} ", bashName, versionNo, bashLineEnd);
+                //Console.Write("{0}-{1}{2} ", bashName, versionNo, bashLineEnd);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write("{0}@{1}", userName, machineName);
+                Console.ResetColor();
+                Console.Write(":");
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.Write("~{0}", currentPath);
+                Console.ResetColor();
+                Console.Write("{0} ", bashLineEnd);
 
                 string commandLine = Console.ReadLine();
                 Array commandList = commandLine.Split(default(string[]), StringSplitOptions.RemoveEmptyEntries);
@@ -56,8 +67,8 @@ namespace JFExplr
                         break;
 
                     case "who":
-                        string userName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-                        Console.WriteLine(userName);
+                        string fullUserName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+                        Console.WriteLine(fullUserName);
                         break;
 
                     case "date":
@@ -73,15 +84,16 @@ namespace JFExplr
                         foreach (string dir in dirList)
                         {
                             string dirTemp = dir.Replace(currentPath, "");
-                            Console.WriteLine(dirTemp.Replace(@"\", ""));
+                            Console.Write(dirTemp.Replace(@"\", "") + "  ");
 
                         }
                         Array fileList = Directory.GetFiles(currentPath);
                         foreach (string file in fileList)
                         {
                             string fileTemp = file.Replace(currentPath, "");
-                            Console.WriteLine(fileTemp.Replace(@"\", ""));
+                            Console.Write(fileTemp.Replace(@"\", "") + "  ");
                         }
+                        Console.WriteLine();
 
                         break;
 
@@ -155,7 +167,7 @@ namespace JFExplr
                         return;
 
                     default:
-                        Console.WriteLine("{0}: {1}: command not found", bashName, command);
+                        Console.WriteLine("{0}: {1}: command not found", bashName, command); 
                         break;
                 } //switch
             }
