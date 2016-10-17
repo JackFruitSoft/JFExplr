@@ -14,12 +14,15 @@ namespace JFExplr
             //Startup
             string rootPath = Directory.GetCurrentDirectory();
             string currentPath = Directory.GetCurrentDirectory();
+            string sourcePath = currentPath;
+            string destinationPath = currentPath;
             string bashName = "jfexplr";
             string versionNo = "0.2";
             string bashLineEnd = "$";
             string userName = Environment.UserName;
             string machineName = Environment.MachineName;
             
+            // Program Core
             for (;;)
             {
                 showBash(userName, machineName, currentPath, bashLineEnd);
@@ -159,7 +162,10 @@ namespace JFExplr
                         break;
 
                     case "cp":
-                        Console.WriteLine("cp");
+                        string cpFlags = (string)restList.GetValue(0);
+                        sourcePath = (string)restList.GetValue(1);
+                        destinationPath = (string)restList.GetValue(2);
+                        Console.WriteLine("{0}  {1}  {2}", cpFlags, sourcePath, destinationPath);
                         break;
 
                     case "rm":
@@ -167,7 +173,10 @@ namespace JFExplr
                         break;
 
                     case "mv":
-                        Console.WriteLine("mv");
+                        string mvFlags = (string)restList.GetValue(0);
+                        sourcePath = (string)restList.GetValue(1);
+                        destinationPath = (string)restList.GetValue(2);
+                        Console.WriteLine("{0}  {1}  {2}", mvFlags, sourcePath, destinationPath);
                         break;
 
                     case "more":
@@ -202,6 +211,16 @@ namespace JFExplr
                         System.Diagnostics.Process.Start("shutdown", "/s /t 0");
                         break;
 
+                    case "uptime":
+                        //System.Diagnostics.PerformanceCounter systemUpTime = new System.Diagnostics.PerformanceCounter("System", "System Up Time");
+                        //systemUpTime.NextValue();
+                        //TimeSpan elapsedTime = TimeSpan.FromSeconds(systemUpTime.NextValue());
+                        // TODO: This is showing the program uptime not system uptime
+                        TimeSpan elapsedTime = TimeSpan.FromTicks(System.Environment.TickCount);
+                        string upTime = string.Format("{0:D2}h:{1:D2}m:{2:D2}s:{3:D3}ms", 
+                            elapsedTime.Hours, elapsedTime.Minutes, elapsedTime.Seconds, elapsedTime.Milliseconds);
+                        Console.WriteLine("The system has been up for {0}", upTime);
+                        break;
                     case "exit":
                     case "quit":
                         return;
