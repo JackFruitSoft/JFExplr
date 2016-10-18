@@ -212,15 +212,11 @@ namespace JFExplr
                         break;
 
                     case "uptime":
-                        //System.Diagnostics.PerformanceCounter systemUpTime = new System.Diagnostics.PerformanceCounter("System", "System Up Time");
-                        //systemUpTime.NextValue();
-                        //TimeSpan elapsedTime = TimeSpan.FromSeconds(systemUpTime.NextValue());
-                        // TODO: This is showing the program uptime not system uptime
-                        TimeSpan elapsedTime = TimeSpan.FromTicks(System.Environment.TickCount);
-                        string upTime = string.Format("{0:D2}h:{1:D2}m:{2:D2}s:{3:D3}ms", 
-                            elapsedTime.Hours, elapsedTime.Minutes, elapsedTime.Seconds, elapsedTime.Milliseconds);
+                        TimeSpan elapsedTime = TimeSpan.FromMilliseconds(Environment.TickCount);
+                        string upTime = string.Format("{0:D2}h:{1:D2}m:{2:D2}s:{3:D3}ms", elapsedTime.Hours, elapsedTime.Minutes, elapsedTime.Seconds, elapsedTime.Milliseconds);
                         Console.WriteLine("The system has been up for {0}", upTime);
                         break;
+
                     case "exit":
                     case "quit":
                         return;
