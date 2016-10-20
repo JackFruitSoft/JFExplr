@@ -248,14 +248,35 @@ namespace JFExplr
             return path.Substring(0, lastInstance);
         } // string removeLastDirectory(string path)
 
+        static string keepLastDirectory(string path)
+        {
+            int lastInstance = path.LastIndexOf(@"\");
+
+            if (lastInstance == -1)
+            {
+                return path;
+            }
+
+            if (path.Length == lastInstance + 1) //Check is a trailing '\' is at the end of path
+            {
+                path = path.Remove(lastInstance, 1);
+                lastInstance = path.LastIndexOf(@"\");
+            }
+
+            lastInstance++; //Eliminate last /
+            int lastIndex = path.Length - lastInstance;
+            
+            return path.Substring(lastInstance, lastIndex);
+        }
+
         static Boolean showBash(string userName, string machineName, string currentPath, string bashLineEnd)
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("{0}@{1}", userName, machineName);
             Console.ResetColor();
             Console.Write(":");
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.Write("~{0}", currentPath);
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.Write("~{0}", keepLastDirectory(currentPath));
             Console.ResetColor();
             Console.Write("{0} ", bashLineEnd);
 
