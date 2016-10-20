@@ -166,6 +166,11 @@ namespace JFExplr
                         sourcePath = (string)restList.GetValue(1);
                         destinationPath = (string)restList.GetValue(2);
                         Console.WriteLine("{0}  {1}  {2}", cpFlags, sourcePath, destinationPath);
+
+                        //if(!System.IO.File.Exists(destinationPath)){
+                        //   System.IO.File.Create(destinationPath);
+                        //}
+                        System.IO.File.Copy(sourcePath, destinationPath, true);
                         break;
 
                     case "rm":
@@ -177,6 +182,7 @@ namespace JFExplr
                         sourcePath = (string)restList.GetValue(1);
                         destinationPath = (string)restList.GetValue(2);
                         Console.WriteLine("{0}  {1}  {2}", mvFlags, sourcePath, destinationPath);
+                        System.IO.File.Move(sourcePath, destinationPath);
                         break;
 
                     case "more":
@@ -197,6 +203,14 @@ namespace JFExplr
 
                     case "pwd":
                         Console.WriteLine(currentPath);
+                        break;
+                    
+                    case "history":
+                        Console.WriteLine("history");
+                        break;
+
+                    case "clear":
+                        Console.Clear();
                         break;
 
                     case "restart": //TODO fix the timer
