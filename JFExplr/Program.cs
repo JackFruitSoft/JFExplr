@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -82,19 +83,97 @@ namespace JFExplr
                         break;
 
                     case "ls":
-                        Array dirList = Directory.GetDirectories(currentPath);
-                        foreach (string dir in dirList)
+                        string lsSwitch = "";
+                            
+                        if(restList.Length > 0)
                         {
-                            string dirTemp = dir.Replace(currentPath, "");
-                            Console.Write(dirTemp.Replace(@"\", "") + "  ");
+                            lsSwitch = (string)restList.GetValue(0);
+                        }
 
-                        }
-                        Array fileList = Directory.GetFiles(currentPath);
-                        foreach (string file in fileList)
+                        string lsPath = currentPath; //Do not allow modifications of currentPath in 'ls', only by 'cd'
+
+                        if (lsPath.LastIndexOf(@"\") == -1) //Root Path
                         {
-                            string fileTemp = file.Replace(currentPath, "");
-                            Console.Write(fileTemp.Replace(@"\", "") + "  ");
+                            lsPath = currentPath + @"\";
                         }
+
+                        Array dirList = Directory.GetDirectories(lsPath);
+                        Array fileList = Directory.GetFiles(lsPath);
+                        int totalItems = dirList.Length + fileList.Length;
+                        
+                        switch(lsSwitch)
+                        {
+                            case "-l":
+                                Console.WriteLine("total {0}", totalItems);
+                                Console.WriteLine();
+
+                                //TODO: Initialize and set according per dir / file
+                                string ownerRead = "-";
+                                string ownerWrite = "-";
+                                string ownerExecute = "-";
+
+                                string groupRead = "-";
+                                string groupWrite = "-";
+                                string groupExecute = "-";
+
+                                string allRead = "-";
+                                string allWrite = "-";
+                                string allExecute = "-";
+
+                                foreach (string dir in dirList)
+                                {
+                                    DateTime dirTime = Directory.GetCreationTime(dir);
+                                    int dirSize = 4096;
+
+                                    Console.Write("d"); //Directory
+                                    Console.Write("{0}{1}{2}", ownerRead, ownerWrite, ownerExecute);
+                                    Console.Write("{0}{1}{2}", groupRead, groupWrite, groupExecute);
+                                    Console.Write("{0}{1}{2}", allRead, allWrite, allExecute);
+                                    Console.Write(" {0} {1} ", userName, machineName);
+                                    Console.Write("{0,6} ", dirSize);
+                                    Console.Write("{0} {1} {2}:{3} ", getShortMonthName(dirTime), dirTime.ToString("yy"), dirTime.Hour, dirTime.Minute);
+
+                                    Console.ForegroundColor = ConsoleColor.DarkCyan;
+                                    string dirTemp = dir.Replace(currentPath, "");
+                                    Console.WriteLine(dirTemp.Replace(@"\", ""));
+                                    Console.ResetColor();
+                                }
+
+                                foreach (string file in fileList)
+                                {
+                                    FileInfo fileInfo = new FileInfo(file);
+                                    int fileSize = (int)fileInfo.Length;
+                                    DateTime fileTime = File.GetCreationTime(file);
+
+                                    Console.Write("-"); //File
+                                    Console.Write("{0}{1}{2}", ownerRead, ownerWrite, ownerExecute);
+                                    Console.Write("{0}{1}{2}", groupRead, groupWrite, groupExecute);
+                                    Console.Write("{0}{1}{2}", allRead, allWrite, allExecute);
+                                    Console.Write(" {0} {1} ", userName, machineName);
+                                    Console.Write("{0,6} ", fileSize);
+                                    Console.Write("{0} {1} {2}:{3} ", getShortMonthName(fileTime), fileTime.ToString("yy"), fileTime.Hour, fileTime.Minute);
+                                    
+                                    string fileTemp = file.Replace(currentPath, "");
+                                    Console.WriteLine(fileTemp.Replace(@"\", ""));
+                                }                                
+                                break;
+
+                            default:
+                                foreach (string dir in dirList)
+                                {
+                                    string dirTemp = dir.Replace(currentPath, "");
+                                    Console.Write(dirTemp.Replace(@"\", "") + "  ");
+
+                                }
+                        
+                                foreach (string file in fileList)
+                                {
+                                    string fileTemp = file.Replace(currentPath, "");
+                                    Console.Write(fileTemp.Replace(@"\", "") + "  ");
+                                }
+                                break;
+                        }
+                        
                         Console.WriteLine();
 
                         break;
@@ -244,7 +323,7 @@ namespace JFExplr
             } // for (;;)
         } // static void Main(string[] args)
 
-        static string removeLastDirectory(string path)
+        public static string removeLastDirectory(string path)
         {
             int lastInstance = path.LastIndexOf(@"\");
 
@@ -262,7 +341,7 @@ namespace JFExplr
             return path.Substring(0, lastInstance);
         } // string removeLastDirectory(string path)
 
-        static string keepLastDirectory(string path)
+        public static string keepLastDirectory(string path)
         {
             int lastInstance = path.LastIndexOf(@"\");
 
@@ -283,18 +362,28 @@ namespace JFExplr
             return path.Substring(lastInstance, lastIndex);
         }
 
-        static Boolean showBash(string userName, string machineName, string currentPath, string bashLineEnd)
+        private static Boolean showBash(string userName, string machineName, string currentPath, string bashLineEnd)
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("{0}@{1}", userName, machineName);
             Console.ResetColor();
             Console.Write(":");
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write("~{0}", keepLastDirectory(currentPath));
             Console.ResetColor();
             Console.Write("{0} ", bashLineEnd);
 
             return true;
+        }
+
+        public static string getFullMonthName(DateTime dateTime)
+        {
+            return CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(dateTime.Month);
+        }
+
+        public static string getShortMonthName(DateTime dateTime)
+        {
+            return CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(dateTime.Month);
         }
 
     } // class Program
