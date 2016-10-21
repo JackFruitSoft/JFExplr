@@ -22,7 +22,7 @@ namespace JFExplr
             string bashLineEnd = "$";
             string userName = Environment.UserName;
             string machineName = Environment.MachineName;
-            
+
             // Program Core
             for (;;)
             {
@@ -37,6 +37,8 @@ namespace JFExplr
                 }
 
                 string command = (string)commandList.GetValue(0);
+                command = command.ToLower();
+
                 Array restList = Array.CreateInstance(typeof(String), commandList.Length - 1);
                 for(int i = 0; i < commandList.Length - 1; i++)
                 {
@@ -151,26 +153,27 @@ namespace JFExplr
                                     Console.Write("{0}{1}{2}", allRead, allWrite, allExecute);
                                     Console.Write(" {0} {1} ", userName, machineName);
                                     Console.Write("{0,6} ", fileSize);
-                                    Console.Write("{0} {1} {2}:{3} ", getShortMonthName(fileTime), fileTime.ToString("yy"), fileTime.Hour, fileTime.Minute);
+                                    Console.Write("{0} {1} {2:D2}:{3:D2} ", getShortMonthName(fileTime), fileTime.ToString("yy"), fileTime.Hour, fileTime.Minute);
                                     
                                     string fileTemp = file.Replace(currentPath, "");
-                                    Console.WriteLine(fileTemp.Replace(@"\", ""));
+                                    Console.WriteLine(Path.GetFileName(file) + "  ");
                                 }                                
                                 break;
 
                             default:
+                                Console.ForegroundColor = ConsoleColor.DarkCyan;
                                 foreach (string dir in dirList)
                                 {
                                     string dirTemp = dir.Replace(currentPath, "");
                                     Console.Write(dirTemp.Replace(@"\", "") + "  ");
-
                                 }
-                        
+                                Console.ResetColor();
+
                                 foreach (string file in fileList)
                                 {
                                     string fileTemp = file.Replace(currentPath, "");
-                                    Console.Write(fileTemp.Replace(@"\", "") + "  ");
-                                }
+                                    Console.Write(Path.GetFileName(file) + "  ");
+                                }                                 
                                 break;
                         }
                         
@@ -183,8 +186,8 @@ namespace JFExplr
                         switch(cdSwitch)
                         {
                             case "..":
-                                string checkPath = removeLastDirectory(currentPath);
-
+                                var checkPath = Path.GetDirectoryName(currentPath);
+                                
                                 if(Directory.Exists(checkPath))
                                 {
                                     currentPath = checkPath;
@@ -314,6 +317,11 @@ namespace JFExplr
                     case "quit":
                         return;
 
+                    //JFExplr Specific Commands
+                    case "c:":
+                        currentPath = "C:";
+                        break;
+
                     default:
                         Console.WriteLine("{0}: {1}: command not found", bashName, command); 
                         break;
@@ -323,32 +331,12 @@ namespace JFExplr
             } // for (;;)
         } // static void Main(string[] args)
 
-        public static string removeLastDirectory(string path)
-        {
-            int lastInstance = path.LastIndexOf(@"\");
-
-            if(lastInstance == -1) //no '\' found
-            {
-                return path; 
-            }
-
-            if (path.Length == lastInstance + 1) //Check is a trailing '\' is at the end of path
-            {
-                path = path.Remove(lastInstance, 1);
-                lastInstance = path.LastIndexOf(@"\");
-            }
-
-            return path.Substring(0, lastInstance);
-        } // string removeLastDirectory(string path)
-
         public static string keepLastDirectory(string path)
         {
             int lastInstance = path.LastIndexOf(@"\");
 
             if (lastInstance == -1)
-            {
                 return path;
-            }
 
             if (path.Length == lastInstance + 1) //Check is a trailing '\' is at the end of path
             {
@@ -357,9 +345,7 @@ namespace JFExplr
             }
 
             lastInstance++; //Eliminate last /
-            int lastIndex = path.Length - lastInstance;
-            
-            return path.Substring(lastInstance, lastIndex);
+            return path.Substring(lastInstance, path.Length - lastInstance);
         }
 
         private static Boolean showBash(string userName, string machineName, string currentPath, string bashLineEnd)
